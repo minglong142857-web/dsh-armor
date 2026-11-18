@@ -1,0 +1,35 @@
+name: check
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: node syntax
+        run: |
+          node --check lib/index.js
+          node --check scripts/apply.mjs
+      - name: python syntax
+        run: |
+          python -m py_compile antigravity/relay/mitm_relay.py
+          python -m py_compile antigravity/relay/relay.py
+          python -m py_compile antigravity/tools/probe_gui_shape.py
+          python -m py_compile antigravity/tools/agy_api.py
+      - name: patch table is well formed
+        run: |
+          node -e "const p=require('./patches/host.json'); if(!Array.isArray(p)||!p.length) process.exit(1);
+          for (const x of p) { for (const k of ['id','file','find','replace','marker']) if (!(k in x)) { console.error('missing', k, 'in', x.id); process.exit(1);} }
+          console.log('patches ok:', p.length);"
+      - name: host-detection helper works
+        run: node -e "import('./lib/index.js').then(m=>console.log('detectHost ->', m.detectHost()))"

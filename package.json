@@ -1,0 +1,95 @@
+{
+  "name": "dsh-armor",
+  "version": "0.3.4",
+  "description": "DeepSeek Harness 破甲补丁包 v0.2：解开目录 + app.asar 双面生效、漂移自诊断、shim 启动器、manifest 自更新。Armor-off patch pack: tree + asar surfaces, drift diagnostics, shim launchers, self-update.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./apply": "./lib/apply.js",
+    "./asar": "./lib/asar.js",
+    "./host": "./lib/host.js",
+    "./drift": "./lib/drift.js",
+    "./shim": "./lib/shim.js",
+    "./update": "./lib/update.js",
+    "./prompt": "./lib/prompt-router.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "armor": "bin/armor.mjs",
+    "dsh-armor": "bin/armor.mjs"
+  },
+  "files": [
+    "lib",
+    "bin",
+    "patches/host.json",
+    "prompts",
+    "docs",
+    "scripts",
+    "tests",
+    "install.ps1",
+    "cordis.patch.yml",
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE",
+    "NOTICE",
+    "tools"
+  ],
+  "armor": {
+    "feed": "https://raw.githubusercontent.com/minglong142857-web/dsh-armor/main/manifest.json",
+    "patchesFeed": "https://raw.githubusercontent.com/minglong142857-web/dsh-armor/main/patches/host.json",
+    "repo": "https://github.com/minglong142857-web/dsh-armor",
+    "branch": "main"
+  },
+  "scripts": {
+    "test": "node tests/run.mjs && node tests/update-e2e.mjs",
+    "test:fast": "node tests/run.mjs --skip-asar",
+    "check": "node bin/armor.mjs check",
+    "apply": "node bin/armor.mjs apply",
+    "revert": "node bin/armor.mjs revert",
+    "doctor": "node bin/armor.mjs doctor",
+    "verify": "node bin/armor.mjs verify",
+    "dedupe": "node bin/armor.mjs dedupe",
+    "pending": "node bin/armor.mjs pending status",
+    "release": "node scripts/release.mjs"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "armor-off",
+    "jailbreak",
+    "patch",
+    "asar",
+    "agent"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "install": {
+      "preferred": "tarball",
+      "tarball": "https://codeload.github.com/minglong142857-web/dsh-armor/tar.gz/refs/heads/main",
+      "zip": "https://codeload.github.com/minglong142857-web/dsh-armor/zip/refs/heads/main",
+      "git": "https://github.com/minglong142857-web/dsh-armor.git"
+    },
+    "targets": [
+      "0.2.0",
+      "0.2.1-rc.2",
+      "0.2.1-rc.5",
+      "0.2.2-rc.3"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/minglong142857-web/dsh-armor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/minglong142857-web/dsh-armor/issues"
+  },
+  "homepage": "https://github.com/minglong142857-web/dsh-armor#readme"
+}
