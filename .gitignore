@@ -1,0 +1,14 @@
+﻿node_modules/
+logs/
+run/
+artifacts/
+*.log
+*.jsonl
+*.armor.bak
+*.dshfix.bak
+.DS_Store
+__pycache__/
+*.pyc
+
+*.bak
+dist/

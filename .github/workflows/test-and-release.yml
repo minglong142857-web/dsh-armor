@@ -1,0 +1,55 @@
+name: test-and-release
+
+# 持续更新的发布流水线：
+#   push / PR  → 跑自测（含 asar 重建校验）
+#   push tag v* → 打 tgz、写 manifest.json（含 sha256）、作为 Release 资产上传
+on:
+  push:
+    branches: [main, master]
+    tags: ["v*"]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: 自测（无 asar 宿主时跳过 asar 部分）
+        run: node tests/run.mjs --skip-asar
+      - name: 自更新端到端（本地 feed）
+        run: node tests/update-e2e.mjs
+      - name: 补丁表结构校验
+        run: node -e "const l=require('./patches/host.json');if(!Array.isArray(l)||!l.length)process.exit(1);for(const p of l)for(const k of ['id','file','find','replace','marker'])if(typeof p[k]!=='string'){console.error(p.id,k);process.exit(1)};console.log(l.length+' patches ok')"
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: test
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: 打 tgz + 写 manifest（真实 sha256）
+        run: node scripts/release.mjs --base=https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}
+      - name: 上传 Release 资产
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.tgz
+            manifest.json
+      - name: 把 manifest 推回默认分支（feed 地址稳定）
+        run: |
+          git config user.name "dsh-armor-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add manifest.json package.json
+          git commit -m "chore(release): ${{ github.ref_name }} manifest" || exit 0
+          git push
