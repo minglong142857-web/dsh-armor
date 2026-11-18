@@ -1,0 +1,23 @@
+armor — dsh-armor CLI
+
+  armor check                      只报告，不写盘（退出码 1 = 有 drift）
+  armor apply [--asar]             打补丁；--asar 同时重建 app.asar（桌面端生效面）
+  armor revert [--asar]            回滚：恢复 .armor.bak
+  armor doctor [--json]            宿主 / 版本 / 两面 / shim / feed 总览
+  armor verify [--strict]          行为断言：两面上"被删的原文"是否真没了（--strict 连 asar 一起要求）
+  armor resync [--write]           漂移诊断：给出候选锚点与行号
+  armor shim install|remove|status 安装/移除 dsh、armor 启动器
+  armor dedupe [--check]           折叠重复 marker（.armor.dedupe.bak 备份）
+  armor pending status|run|clear|schedule|unschedule   延迟队列（asar 锁冲突时）
+  armor asar verify|patch [--check] app.asar 校验与补丁
+  armor update check|apply|patches [--feed=URL] [--dry-run]   持续更新
+  armor prompt pick --model <id> [--by-model='{"*":"p.md"}'] [--policy=strict|fallback|always]
+
+公共参数
+  --host=<…>/app/dsh/node_modules/@deepseek-ai   指定宿主（默认自动探测）
+  --patches=<file>                                指定补丁表（默认 patches/host.json）
+  --bin=<dir>                                     shim 目录（默认 $DSH_HOME/bin）
+  --json                                          机器可读输出
+
+退出码
+  0 全绿 / 1 有 pending 或 drift / 2 宿主或参数错误

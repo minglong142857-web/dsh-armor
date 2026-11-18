@@ -1,0 +1,22 @@
+# dsh-armor bundle patch (v0.2)
+#
+# 三件事：
+#   1) 启动时给解开目录打补丁（立刻影响 dsh web / CLI / shim 启动的进程）
+#   2) 可选：重建 app.asar（桌面端 Electron 真正加载的是 asar 里的那份）
+#   3) 提示词路由：按模型挑注入文本 + workspace baseline 三档策略
+- id: dsh-armor
+  name: dsh-armor
+  inject: [systemPrompt, tools]
+  config:
+    enabled: true
+    applyOnStart: true          # 启动时自动打补丁（幂等）
+    asar: false                 # 桌面端要真正生效就打开：会对 app.asar 重建并留 .armor.bak
+    asarBackup: true
+    host: ""                    # 留空 = 自动探测官方桌面安装
+    patchesFile: ""             # 留空 = patches/host.json
+    promptRouter:
+      policy: fallback          # strict / fallback / always
+      model: ""                 # 运行时可覆盖；留空则用默认槽
+      byModel:
+        "deepseek-*": prompts/deepseek.md
+        "*": prompts/default.md
