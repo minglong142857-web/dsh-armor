@@ -1,0 +1,17 @@
+{
+  "name": "dsh-armor",
+  "version": "0.3.6",
+  "tarball": "https://github.com/minglong142857-web/dsh-armor/releases/download/v0.3.6/dsh-armor-0.3.6.tgz",
+  "sha256": "2a8d91d0820a3dd3f215ee062d8c6a36f0ba75533f9fbe612ef37b8a365b2ba2",
+  "patchesSha256": "88c63f524b21bbc23f6191c347d37ab4aa0ea14c4f951fc9ca78429819fab5b2",
+  "patchesCount": 9,
+  "notes": "v0.3.6: feed 走 GitHub API（绕 raw CDN 缓存）+ curl 兜底",
+  "releasedAt": "2026-11-18T16:05:41.313Z",
+  "minHost": "0.2.0",
+  "targets": [
+    "0.2.0",
+    "0.2.1-rc.2",
+    "0.2.1-rc.5",
+    "0.2.2-rc.3"
+  ]
+}
